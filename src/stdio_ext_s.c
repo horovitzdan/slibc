@@ -45,10 +45,12 @@ errno_t slibc_set_tmp_dir(const char *tmp_dir)
 			return -1;
 	}
 
-	SLIBC_MUTEX_LOCK(&slibc_tmp_dir_m);
+	if (SLIBC_MUTEX_LOCK(&slibc_tmp_dir_m) != 0)
+		return -1;
 	// we know this works
 	strcpy(slibc_tmp_dir, local_tmp_dir);
-	SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m);
+	if (SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m) != 0)
+		return -1;
 
 	return 0;
 }
@@ -69,16 +71,19 @@ errno_t slibc_get_tmp_dir(char *buf, rsize_t buf_size)
 		EINVAL, EINVAL);
 
 
-	SLIBC_MUTEX_LOCK(&slibc_tmp_dir_m);
+	if (SLIBC_MUTEX_LOCK(&slibc_tmp_dir_m) != 0)
+		return -1;
 	if (strlen(slibc_tmp_dir) < buf_size)
 	{
 		strcpy(buf, slibc_tmp_dir);
-		SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m);
+		if (SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m) != 0)
+			return -1;
 		return 0;
 	}
 	else
 	{
-		SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m);
+		if (SLIBC_MUTEX_UNLOCK(&slibc_tmp_dir_m) != 0)
+			return -1;
 
 		buf[0] = '\0';
 

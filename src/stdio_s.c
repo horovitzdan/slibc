@@ -112,7 +112,7 @@ static inline void get_s_cleanup(char *s)
 	if(s)
 		s[0] = '\0';
 	// read and discard characters from stdin until \n,EOF, or read error
-	char c;
+	int c;
 	while((c = getc(stdin)) != EOF && c !='\n');
 }
 
@@ -122,7 +122,7 @@ char *gets_s(char *s, rsize_t n)
 							  EINVAL,
 							  NULL);
 
-	char ch;
+	int ch = EOF;
 	rsize_t i = 0;
 	for(; (i < n-1) && ((ch = getchar()) != EOF) && (ch != '\n'); i++ )
 		s[i] = ch;
@@ -150,7 +150,7 @@ char *gets_s(char *s, rsize_t n)
 	}
 }
 
-
+/* Compiled out, because fopen_s() and freopen_s() are not fully implemented */
 errno_t fopen_s(FILE * restrict * restrict streamptr,
 				const char * restrict filename,
 				const char * restrict mode)
@@ -277,3 +277,4 @@ errno_t freopen_s(FILE * restrict * restrict newstreamptr,
 		/* } */
 	}
 }
+

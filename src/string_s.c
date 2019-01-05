@@ -316,6 +316,8 @@ errno_t strerror_s(char *s, rsize_t maxsize,
 			// we do not know whether the string was truncated.
 			// find that out
 			char *tmp = (char*) malloc(maxsize + 1);
+			if (tmp == NULL)
+				return -1;
 			// we try with one additional byte
 			char *ret = strerror_r(errnum, tmp, maxsize+1);
 			if (strlen(ret) > strlen(s))

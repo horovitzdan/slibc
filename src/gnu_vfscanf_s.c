@@ -2931,8 +2931,9 @@ gnu_vfwscanf_s (_IO_FILE *s, const wchar_t *format, _IO_va_list argptr,
 			base = 16;
 			/* A PTR must be the same size as a `long int'.  */
 			flags &= ~(SHORT|LONGDBL);
-			if (need_long)
+			#if need_long
 				flags |= LONG;
+			#endif
 			flags |= READ_POINTER;
 			goto number;
 
